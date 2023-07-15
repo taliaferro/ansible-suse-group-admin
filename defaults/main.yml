@@ -2,7 +2,6 @@
 # defaults file for suse-group-admin
 
 admin_group: wheel
-add_user_to_admin_group: true
 lock_root_account: false
 require_password: true
 
