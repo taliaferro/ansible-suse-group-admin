@@ -1,4 +1,4 @@
-Group admin configuration for SUSE-derived Linux distributions
+Group admin role for SUSE-like Linux distributions
 =========
 
 The default configuration for OpenSUSE puts all administrative powers in the hands of the `root` user, such that any ordinary user who wants to adminstrate the system must know `root`'s password.
@@ -8,7 +8,7 @@ The group administration permissions model has a number of advantages over the s
 
 This role changes the default behavior for all privilege escalation agents in OpenSUSE (`sudo`, `kdesu`, and `polkit`) to allow users in an administrative group (by default `wheel`) to escalate privileges to root.
 
-> Note: this has not been tested on OpenSUSE MicroOS or SUSE ALP. Those distributions use a read-only root filesystem, and the system configuration changes that this role makes may not persist on those distributions without additional steps.
+> :warning: Warning: this has not been tested on OpenSUSE MicroOS or SUSE ALP. Those distributions use a read-only root filesystem, and the system configuration changes that this role makes may not persist on those distributions without additional steps.
 
 
 Role Variables
