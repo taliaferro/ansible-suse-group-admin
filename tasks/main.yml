@@ -59,4 +59,9 @@
     dest: /etc/polkit-1/rules.d/49-group-admin.rules.j2
   notify: restart polkit
 
-
+- name: Lock root account
+  when: lock_root_account
+  become: true
+  user:
+    name: root
+    password: "!"
