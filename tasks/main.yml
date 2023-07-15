@@ -56,7 +56,7 @@
   become: true
   template:
     src: 49-group-admin.rules.j2
-    dest: /etc/polkit-1/rules.d/49-group-admin.rules.j2
+    dest: /etc/polkit-1/rules.d/49-group-admin.rules
   notify: restart polkit
 
 - name: Lock root account
