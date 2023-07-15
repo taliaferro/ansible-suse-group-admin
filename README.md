@@ -25,8 +25,9 @@ Example Playbook
       when: "{{ansible_os_family is 'Suse'}}"
       roles:
          - role: taliaferro.suse-group-admin
-           # vars:
-           #   - admin_group: sudo
+           vars:
+             safety_admin_user: taliaferro
+           #   admin_group: sudo
 
 License
 -------
