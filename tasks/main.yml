@@ -1,0 +1,62 @@
+---
+# tasks file for suse-group-admin
+
+- name: create admin group
+  become: true
+  ansible.builtin.group:
+    name: "{{ admin_group }}"
+    state: present
+    system: true
+
+- name: add user to admin group
+  become: true
+  ansible.builtin.user:
+    name: "{{ safety_admin_user }}"
+    groups: "{{ admin_group }}"
+    append: true
+
+- name: configure sudo to allow admin group to escalate
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    regexp: "^%{{admin_group}}"
+    firstmatch: true
+    insertbefore: 'sudoers\.d'
+    line: "%{{admin_group}} ALL=(ALL:ALL) {% if not require_password %}NOPASSWD:{% endif %} ALL"
+    validate: 'visudo -c -f %s'
+
+- name: make sudo prompt for user password 
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    state: absent
+    regexp: '^(Defaults targetpw|ALL\s+ALL=\(ALL\)\s+ALL)'
+    validate: 'visudo -c -f %s'
+
+
+- name: Get all user home directories
+  #when: "{{ configure_kdesu | bool}}"
+  ansible.builtin.getent:
+    database: passwd
+  register: passwd_output
+
+- name: configure kdesu to use sudo for privilege escalation 
+  loop: "{{ getent_passwd.values() | list + [['x',999999,999999,'Skeleton', '/etc/skel', '/usr/sbin/nologin']]}}"
+  when: item[1] | int >= 1000
+  become: true
+  community.general.ini_file:
+    backup: true
+    create: true
+    path: "{{item[4]}}/.config/kdesurc"
+    section: "super-user-command"
+    option: "super-user-command"
+    value: "sudo"
+
+- name: Configure PolicyKit to allow admin group to escalate
+  become: true
+  template:
+    src: 49-group-admin.rules.j2
+    dest: /etc/polkit-1/rules.d/49-group-admin.rules.j2
+  notify: restart polkit
+
+

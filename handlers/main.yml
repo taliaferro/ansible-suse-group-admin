@@ -1,0 +1,10 @@
+---
+# handlers file for suse-group-admin
+
+- name: Restart PolicyKit daemon
+  become: true
+  systemd:
+    name: polkit 
+    state: restarted
+  listen: "restart polkit"
+

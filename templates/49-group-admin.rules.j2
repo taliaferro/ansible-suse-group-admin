@@ -1,0 +1,16 @@
+{% if require_password %}
+
+polkit.addAdminRule(function(action, subject) {
+    return ["unix-group:{{admin_group}}"];
+});
+
+{% else %}
+
+polkit.addRule(function(action, subject) {
+  if (subject.isInGroup("{{ admin_group }}")) {
+    return polkit.Result.YES;
+  }
+});
+
+{% endif %}
+
