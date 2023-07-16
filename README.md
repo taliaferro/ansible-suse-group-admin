@@ -11,6 +11,9 @@ This role changes the default behavior for all privilege escalation agents in Op
 > :warning: Warning: this has not been tested on OpenSUSE MicroOS or SUSE ALP. Those distributions use a read-only root filesystem, and the system configuration changes that this role makes may not persist on those distributions without additional steps.
 
 
+> :warning: This is not fully functional on GNOME desktops. On KDE, YaST uses `kdesu` for privilege escalation, which can be made to respect your system sudoers file. However, on GNOME it uses `gnomesu`, which is specific to OpenSUSE itself and has no regard for any of this configuration. Other DEs use `xdg-su` which has the same problem.
+> It may be possible to fix this by editing PAM configuration -- I'll come back to this at some point.
+
 Role Variables
 --------------
 - `safety_admin_user` (**no default, you must set this yourself**): This user will be added to the administrative group before making the configuration changes. **If you select a user you cannot access, you will probably be locked out of the root account.** 
