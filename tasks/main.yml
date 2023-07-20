@@ -41,13 +41,15 @@
   register: passwd_output
 
 - name: configure kdesu to use sudo for privilege escalation 
-  loop: "{{ getent_passwd.values() | list + [['x',999999,999999,'Skeleton', '/etc/skel', '/usr/sbin/nologin']]}}"
-  when: item[1] | int >= 1000
+  loop: "{{ getent_passwd.values() | list + [['x',0,0,'Skeleton', '/etc/skel', '/usr/sbin/nologin']]}}"
+  when: item[1] | int >= 1000 or item[4] == '/etc/skel'
   become: true
   community.general.ini_file:
     backup: true
     create: true
     path: "{{item[4]}}/.config/kdesurc"
+    owner: "{{ item[1] }}"
+    group: "{{ item[2] }}"
     section: "super-user-command"
     option: "super-user-command"
     value: "sudo"
